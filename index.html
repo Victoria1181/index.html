@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AC — Digital Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0e0c;
+    --paper: #f5f0e8;
+    --cream: #ede8dc;
+    --accent: #c9541a;
+    --accent2: #2a4a3e;
+    --gold: #b89a5a;
+    --muted: #7a7268;
+    --white: #ffffff;
+    --shadow: 0 4px 24px rgba(15,14,12,0.12);
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .card-hero {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 52px 28px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.15;
+  }
+  .card-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0.1;
+  }
+  .avatar-ring {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    border: 3px solid var(--gold);
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem; font-weight: 800;
+    color: var(--paper);
+    position: relative; z-index: 1;
+  }
+  .worker-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem; font-weight: 800;
+    letter-spacing: -0.02em;
+    position: relative; z-index: 1;
+  }
+  .worker-title {
+    font-size: 0.85rem;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 6px;
+    position: relative; z-index: 1;
+  }
+
+  .card-body { padding: 28px; max-width: 480px; margin: 0 auto; }
+
+  /* Contact strip */
+  .contact-strip {
+    background: var(--cream);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(15,14,12,0.08);
+  }
+  .contact-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(15,14,12,0.07);
+  }
+  .contact-row:last-child { border-bottom: none; }
+  .contact-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .contact-icon svg { width: 16px; height: 16px; fill: var(--paper); }
+  .contact-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .contact-value { font-size: 0.95rem; font-weight: 500; }
+
+  /* Services */
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .services-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .service-tag {
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: 40px;
+    letter-spacing: 0.02em;
+  }
+
+  /* CTA Button */
+  .btn-primary {
+    width: 100%;
+    background: var(--accent);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 16px 24px;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .btn-primary:hover {
+    background: #a84414;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(201,84,26,0.35);
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--accent2);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 40px;
+    z-index: 999;
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Fade in animation */
+  .card-body { animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ PUBLIC CARD VIEW ══════════════ -->
+<div class="card-hero">
+  <div class="avatar-ring">AC</div>
+  <div class="worker-name">Alwyn Charles</div>
+  <div class="worker-title">AC Property Maintenance London</div>
+</div>
+
+<div class="card-body">
+
+  <!-- Contact Details -->
+  <p class="section-title">Contact Details</p>
+  <div class="contact-strip">
+    <div class="contact-row">
+      <div class="contact-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 8 1.34 8 4v2H4v-2c0-2.66 5.3-4 8-4zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>
+      </div>
+      <div>
+        <div class="contact-label">Name</div>
+        <div class="contact-value">Alwyn Charles</div>
+      </div>
+    </div>
+    <div class="contact-row">
+      <div class="contact-icon">
+        <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+      </div>
+      <div>
+        <div class="contact-label">Phone</div>
+        <div class="contact-value">07830 700027</div>
+      </div>
+    </div>
+    <div class="contact-row">
+      <div class="contact-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      </div>
+      <div>
+        <div class="contact-label">Location</div>
+        <div class="contact-value">Greater London, UK</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Services -->
+  <p class="section-title">Services Offered</p>
+  <div class="services-grid">
+    <span class="service-tag">Plumbing</span>
+    <span class="service-tag">Plastering</span>
+    <span class="service-tag">Decorating</span>
+    <span class="service-tag">Electrics</span>
+    <span class="service-tag">Tiling</span>
+  </div>
+
+  <!-- Add to Contacts CTA — directly triggers vCard download -->
+  <button class="btn-primary" onclick="addToContacts()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm6 12H6v-1c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1z"/></svg>
+    Add to Contacts
+  </button>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── Worker 1's contact info — edit these values ──
+  const worker = {
+    name: 'Alwyn Charles',
+    phone: '07830700027',
+    org: 'AC Property Maintenance London',
+    title: 'AC Property Maintenance London',
+    location: 'Greater London, UK'
+  };
+
+  // ── BUILD vCard & TRIGGER DOWNLOAD ──
+  // On mobile, opening a .vcf file redirects straight to the Contacts app
+  // and prompts the user to confirm saving the contact.
+  function addToContacts() {
+    const lines = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      `FN:${worker.name}`,
+      `TEL;TYPE=CELL:${worker.phone}`,
+      `ORG:${worker.org}`,
+      `TITLE:${worker.title}`,
+      `ADR;TYPE=WORK:;;${worker.location};;;;`,
+      'END:VCARD'
+    ];
+    if (worker.email) lines.splice(3, 0, `EMAIL:${worker.email}`);
+    const vcard = lines.join('\n');
+
+    const blob = new Blob([vcard], { type: 'text/vcard' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${worker.name.replace(/\s+/g, '_')}.vcf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast('📱 Opening Contacts — tap Save to add!');
+  }
+
+  // ── TOAST ──
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+</script>
+</body>
+</html>
